@@ -56,7 +56,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (elpy ein better-defaults markdown-mode+ markdown-mode use-package))))
+    (pager dashboard flycheck-mypy elpy ein better-defaults markdown-mode+ markdown-mode use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -66,3 +66,21 @@
 
 ;; load python
 (load "~/.emacs.d/python/python.el")
+
+;; load breakline
+(load "~/.emacs.d/page-break-lines/page-break-lines.el")
+
+;; use emacs-dashboard
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook))
+
+
+;; Set the title
+(setq dashboard-banner-logo-title "Don't get mad get RAAAAD")
+
+
+(setq dashboard-items '((recents  . 5)
+                        (bookmarks . 5)
+                        (projects . 5)
+                        (agenda . 5)))
