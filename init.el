@@ -1,7 +1,9 @@
 ;; set shell
+
 (setenv "SHELL" "/bin/bash")
 
-;; prevent opening screen 
+;; prevent opening screen
+
 (setq inhibit-startup-message t) ;; hide the startup message
 
 
@@ -56,7 +58,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (pager dashboard flycheck-mypy elpy ein better-defaults markdown-mode+ markdown-mode use-package))))
+    (json-mode js3-mode web-mode ## pager dashboard flycheck-mypy elpy ein better-defaults markdown-mode+ markdown-mode use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -84,3 +86,35 @@
                         (bookmarks . 5)
                         (projects . 5)
                         (agenda . 5)))
+
+;; setup flycheck
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
+
+;; use web-mode for .jsx files
+(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+
+;; http://www.flycheck.org/manual/latest/index.html
+(require 'flycheck)
+
+;; turn on flychecking globally
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; disable jshint since we prefer eslint checking
+(setq-default flycheck-disabled-checkers
+  (append flycheck-disabled-checkers
+    '(javascript-jshint)))
+
+;; use eslint with web-mode for jsx files
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+
+;; customize flycheck temp file prefix
+(setq-default flycheck-temp-prefix ".flycheck")
+
+;; disable json-jsonlist checking for json files
+(setq-default flycheck-disabled-checkers
+  (append flycheck-disabled-checkers
+    '(json-jsonlist)))
+
