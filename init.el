@@ -58,7 +58,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (restart-emacs auto-package-update neotree json-mode js3-mode web-mode ## pager dashboard flycheck-mypy elpy ein better-defaults markdown-mode+ markdown-mode use-package))))
+    (projectile restart-emacs auto-package-update neotree json-mode js3-mode web-mode ## pager dashboard flycheck-mypy elpy ein better-defaults markdown-mode+ markdown-mode use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -200,3 +200,8 @@
   (add-to-list 'load-path "~/.emacs.d/neotree")
   (require 'neotree)
     (global-set-key [f8] 'neotree-toggle)
+
+
+;; Every time when the neotree window is opened, let it find current file and jump to node.
+
+(setq neo-smart-open t)
