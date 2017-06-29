@@ -58,7 +58,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (json-mode js3-mode web-mode ## pager dashboard flycheck-mypy elpy ein better-defaults markdown-mode+ markdown-mode use-package))))
+    (restart-emacs auto-package-update neotree json-mode js3-mode web-mode ## pager dashboard flycheck-mypy elpy ein better-defaults markdown-mode+ markdown-mode use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -153,3 +153,50 @@
     (let ((web-mode-enable-part-face nil))
       ad-do-it)
     ad-do-it))
+
+
+;; reid is the best
+
+(use-package auto-package-update
+	:ensure t
+	:init
+	(setq auto-package-update-interval 1))
+
+(use-package restart-emacs
+	:ensure t)
+
+;; Give me a warning
+
+(add-hook 'auto-package-update-before-hook
+          (lambda ()
+            (message "Updating packages and restarting!")))
+
+;; Kick emacs after packages are updated
+
+(add-hook 'auto-package-update-after-hook
+          (lambda ()
+            (restart-emacs)))
+
+;; Do some crazy shit to automatically rebuild the Irony server
+
+(add-hook 'auto-package-update-after-hook
+          (lambda ()
+            ;; FIXME: This cmd format string is lifted directly from irony-mode.el It would be nice
+            ;; if it was something irony exported I could call into.
+            (let ((cmd (format
+                        (concat "%s %s %s && %s --build . "
+                                "--use-stderr --config Release --target install")
+                        (shell-quote-argument irony-cmake-executable)
+                        (shell-quote-argument (concat "-DCMAKE_INSTALL_PREFIX="
+                                                      (expand-file-name
+                                                       irony-server-install-prefix)))
+                        (shell-quote-argument irony-server-source-dir)
+                        (shell-quote-argument irony-cmake-executable))))
+              (funcall-interactively 'irony-install-server cmd))))
+
+
+
+;; add neotree
+  (add-to-list 'load-path "~/.emacs.d/neotree")
+  (require 'neotree)
+    (global-set-key [f8] 'neotree-toggle)
