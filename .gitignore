@@ -3,5 +3,5 @@ dist-*
 
 \#*
 
-elpa/archives/*
-elpa/*
+/elpa/archives/*
+/elpa/*
