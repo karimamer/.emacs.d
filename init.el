@@ -1,3 +1,5 @@
+;;; config  --- my config
+;;; Commentary
 ;; set shell
 
 (setenv "SHELL" "/bin/bash")
@@ -12,7 +14,7 @@
 (prefer-coding-system 'utf-8)
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(load-theme 'dracula t)
+(load-theme 'lavender t)
 
 ;; Set up package archives
 
@@ -38,9 +40,14 @@
 ;; Pin a couple troublesome packages
 (add-to-list 'package-pinned-packages '(python-mode . "melpa") t)
 
+(eval-when-compile
+  (require 'use-package))
+
 ;; refresh packages
 (when (not package-archive-contents)
   (package-refresh-contents))
+
+
 
 ;; markdown
 (use-package markdown-mode
@@ -58,7 +65,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (projectile restart-emacs auto-package-update neotree json-mode js3-mode web-mode ## pager dashboard flycheck-mypy elpy ein better-defaults markdown-mode+ markdown-mode use-package))))
+    (haskell-emacs intero magit projectile restart-emacs auto-package-update neotree json-mode js3-mode web-mode ## pager dashboard flycheck-mypy elpy ein better-defaults markdown-mode+ markdown-mode use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -145,7 +152,6 @@
 (add-hook 'web-mode-hook  'my-web-mode-hook)
 
 
-
 ;; for better jsx syntax-highlighting in web-mode
 ;; - courtesy of Patrick @halbtuerke
 (defadvice web-mode-highlight-part (around tweak-jsx activate)
@@ -156,7 +162,6 @@
 
 
 ;; reid is the best
-
 (use-package auto-package-update
 	:ensure t
 	:init
@@ -166,13 +171,11 @@
 	:ensure t)
 
 ;; Give me a warning
-
 (add-hook 'auto-package-update-before-hook
           (lambda ()
             (message "Updating packages and restarting!")))
 
 ;; Kick emacs after packages are updated
-
 (add-hook 'auto-package-update-after-hook
           (lambda ()
             (restart-emacs)))
@@ -201,7 +204,49 @@
   (require 'neotree)
     (global-set-key [f8] 'neotree-toggle)
 
-
+;; install to git emacs
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 ;; Every time when the neotree window is opened, let it find current file and jump to node.
 
 (setq neo-smart-open t)
+
+;;; flycheck-mypy.el --- Support mypy in flycheckß
+;;; Code:
+(require 'flycheck)
+
+(flycheck-def-args-var flycheck-python-mypy-args python-mypy)
+
+(flycheck-define-checker python-mypy
+  "Mypy syntax checker. Requires mypy>=0.3.1.
+Customize `flycheck-python-mypy-args` to add specific args to default
+executable.
+E.g. when processing Python2 files, add \"--py2\".
+See URL `http://mypy-lang.org/'."
+
+  :command ("mypy"
+            (eval flycheck-python-mypy-args)
+            source-original)
+  :error-patterns
+  ((error line-start (file-name) ":" line ": error:" (message) line-end))
+  :modes python-mode)
+
+(add-to-list 'flycheck-checkers 'python-mypy t)
+
+(provide 'flycheck-mypy)
+;;; flycheck-mypy.el ends here
+
+;; Install Intero
+(package-install 'intero)
+(add-hook 'haskell-mode-hook 'intero-mode)
+
+;; tidal
+(require 'package)
+(add-to-list 'package-archives
+    '("marmalade" .
+      "http://marmalade-repo.org/packages/"))
+(package-initialize)
+(setq load-path (cons "~/tidal/" load-path))
+(require 'tidal)
+(setq tidal-interpreter "/usr/local/bin/ghci")
