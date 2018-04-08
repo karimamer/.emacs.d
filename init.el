@@ -47,7 +47,8 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-
+;; line number
+(global-linum-mode t)
 
 ;; markdown
 (use-package markdown-mode
