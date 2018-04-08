@@ -66,7 +66,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (haskell-emacs intero magit projectile restart-emacs auto-package-update neotree json-mode js3-mode web-mode ## pager dashboard flycheck-mypy elpy ein better-defaults markdown-mode+ markdown-mode use-package))))
+    (fish-mode haskell-emacs intero magit projectile restart-emacs auto-package-update neotree json-mode js3-mode web-mode ## pager dashboard flycheck-mypy elpy ein better-defaults markdown-mode+ markdown-mode use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -251,3 +251,6 @@ See URL `http://mypy-lang.org/'."
 (setq load-path (cons "~/tidal/" load-path))
 (require 'tidal)
 (setq tidal-interpreter "/usr/local/bin/ghci")
+
+
+;;; init ends here
