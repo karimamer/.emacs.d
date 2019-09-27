@@ -2,7 +2,7 @@
 ;;; Commentary
 ;; set shell
 
-(setenv "SHELL" "/bin/bash")
+(setenv "SHELL" "/usr/local/bin/fish")
 
 ;; prevent opening screen
 
@@ -13,35 +13,36 @@
 
 (prefer-coding-system 'utf-8)
 
+
+
+
+;; themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(load-theme 'lavender t)
+(load-theme 'cherry-blossom t)
 
 ;; Set up package archives
 
+;; Update package-archive lists
 (require 'package)
 (setq package-enable-at-startup nil)
  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
- (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (package-initialize)
 
+;; Install 'use-package' if necessary
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
-
-;; Pull in use-package for everything else
-
+;; Enable use-package
 (eval-when-compile
   (require 'use-package))
 
+;;; init-use-package.el ends here
 
 ;; Pin a couple troublesome packages
 (add-to-list 'package-pinned-packages '(python-mode . "melpa") t)
-
-(eval-when-compile
-  (require 'use-package))
 
 ;; refresh packages
 (when (not package-archive-contents)
@@ -87,7 +88,7 @@
 
 
 ;; Set the title
-(setq dashboard-banner-logo-title "Don't get mad get RAAAAD")
+(setq dashboard-banner-logo-title "work setup")
 
 
 (setq dashboard-items '((recents  . 5)
@@ -238,19 +239,29 @@ See URL `http://mypy-lang.org/'."
 (provide 'flycheck-mypy)
 ;;; flycheck-mypy.el ends here
 
-;; Install Intero
-(package-install 'intero)
-(add-hook 'haskell-mode-hook 'intero-mode)
 
-;; tidal
-(require 'package)
-(add-to-list 'package-archives
-    '("marmalade" .
-      "http://marmalade-repo.org/packages/"))
-(package-initialize)
-(setq load-path (cons "~/tidal/" load-path))
-(require 'tidal)
-(setq tidal-interpreter "/usr/local/bin/ghci")
+;; LSP
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode t))
+(use-package yasnippet
+  :ensure t)
+(use-package lsp-mode
+  :ensure t
+  :hook (haskell-mode . lsp)
+  :commands lsp)
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+(use-package lsp-haskell
+ :ensure t
+ :config
+ (setq lsp-haskell-process-path-hie "ghcide")
+ (setq lsp-haskell-process-args-hie '())
+ ;; Comment/uncomment this line to see interactions between lsp client/server.
+ ;;(setq lsp-log-io t)
+ )
 
 
 ;;; init ends here
